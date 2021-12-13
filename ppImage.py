@@ -12,6 +12,11 @@ basic_class = [HIGH, MID, LOW]
 
 
 def classify_img(img_path: str):
+    """
+    classify image
+    :param img_path:
+    :return:
+    """
     im = Image.open(img_path)
     w, h = im.size
     if w >= 1920:
