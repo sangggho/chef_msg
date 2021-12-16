@@ -4,6 +4,9 @@ import cv2 as cv
 
 
 def kkakdugi(img_path: str, size=256, overlap_factor=1):
+    """
+    chop image
+    """
     img_name = Path(img_path).name
     save_dir = Path('./chopped') / img_name
     save_dir.mkdir(parents=True, exist_ok=True)
