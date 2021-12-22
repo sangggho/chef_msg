@@ -3,26 +3,35 @@ from pathlib import Path
 import cv2 as cv
 
 
-def kkakdugi(img_path: str, size=256, overlap_factor=1):
+def _check_path(img_path: str, save_dir_name: str = 'dish') -> (str, str):
+    img_name = Path(img_path).name
+    save_path = Path(save_dir_name) / img_name
+    save_path.mkdir(parents=True, exist_ok=True)
+    return img_name, save_path
+
+
+def _is_factor_positive(size: int, overlap: int) -> bool:
+    if size > 0 and overlap > 0:
+        return True
+    else:
+        raise Exception('The factor(size, overlap) cannot be negative.')
+
+
+def kkakdugi(img_path: str, size: int = 256, overlap: int = 1):
     """
     chop image
     """
-    img_name = Path(img_path).name
-    save_dir = Path('./chopped') / img_name
-    save_dir.mkdir(parents=True, exist_ok=True)
 
-    img = cv.imread(img_path)
-    w, h, ch = img.shape
-    print(f':: image read {img.shape}')
+    if _is_factor_positive(size, overlap):
+        img_name, save_dir = _check_path(img_path)
 
-    if overlap_factor > 0:
-        max_h_count = int(w / size) * overlap_factor
-        w_offset = int((w - size) / max_h_count)
-        w_chop_count = max_h_count + 1
+        img = cv.imread(img_path)
+        w, h, ch = img.shape
+        print(f'[INFO::READ] {img_name} {img.shape}')
 
-        max_h_count = int(h / size) * overlap_factor
-        h_offset = int((h - size) / max_h_count)
-        h_chop_count = max_h_count + 1
+        max_w_count, max_h_count = int(w / size) * overlap, int(h / size) * overlap
+        w_offset, h_offset = int((w - size) / max_w_count), int((h - size) / max_h_count)
+        w_chop_count, h_chop_count = max_w_count + 1, max_h_count + 1
 
         for h in range(h_chop_count):
             h0 = h * h_offset
@@ -35,4 +44,4 @@ def kkakdugi(img_path: str, size=256, overlap_factor=1):
                     cv.imwrite(f'{save_dir}/{h:02d}_{w:02d}_{img_name}', region)
                 except cv.error:
                     pass
-                print(f':: "{h:02d}_{w:02d}_{img_name}" saved.')
+                print(f'[WORK::SAVE] "{h:02d}_{w:02d}_{img_name}"')
