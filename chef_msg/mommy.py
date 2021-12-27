@@ -26,8 +26,8 @@ def kkakdugi(img_path: str, size: int = 256, overlap: int = 1):
         img_name, save_dir = _check_path(img_path)
 
         img = cv.imread(img_path)
-        w, h, ch = img.shape
-        print(f'[INFO::READ] {img_name} {img.shape}')
+        h, w, ch = img.shape
+        print(f'[::INFO:: READ] {img_name} {img.shape}')
 
         max_w_count, max_h_count = int(w / size) * overlap, int(h / size) * overlap
         w_offset, h_offset = int((w - size) / max_w_count), int((h - size) / max_h_count)
@@ -44,4 +44,4 @@ def kkakdugi(img_path: str, size: int = 256, overlap: int = 1):
                     cv.imwrite(f'{save_dir}/{h:02d}_{w:02d}_{img_name}', region)
                 except cv.error:
                     pass
-                print(f'[WORK::SAVE] "{h:02d}_{w:02d}_{img_name}"')
+                print(f'[::WORK:: SAVE] "{h:02d}_{w:02d}_{img_name}"')
